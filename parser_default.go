@@ -22,13 +22,13 @@ type ConfigParserDefault struct {
 }
 
 // NewParserDefault is the function that creates a new default parser.
-func NewParserDefault(cfg optional.Option[ConfigParserDefault]) (p Parser) {
+func NewParserDefault(cfg optional.Option[ConfigParserDefault]) (p *ParserDefault) {
 	// default configuration
 	defaultCfg := ConfigParserDefault{
-		PatternCLI: `^(\w+(?:\s+\w+)+)(\s+-{1,2}\w+\s+\w+)*(\s+-[A-Z]+)*$`,
+		PatternCLI: `^(\w+(?:\s+\w+)+)(\s+-{1,2}\w+\s+\w+)*(\s+-[A-Z0-9]+)*$`,
 		PatternChain: `^(\w+(?:\s+\w+)+)`,
 		PatternFlag: `(\s+-{1,2}\w+\s+\w+)+`,
-		PatternOption: `(\s+-[A-Z]+)+`,
+		PatternOption: `(\s+-[A-Z0-9]+)+`,
 		Trimmer: `\s{2,}`,
 	}
 	if cfg.IsSome() {
@@ -63,14 +63,19 @@ func NewParserDefault(cfg optional.Option[ConfigParserDefault]) (p Parser) {
 // ParserDefault is the struct that wraps the default parser.
 type ParserDefault struct {
 	// patternCLI is the regexp pattern of the full command line.
+	// - default: `^(\w+(?:\s+\w+)+)(\s+-{1,2}\w+\s+\w+)*(\s+-[A-Z0-9]+)*$`
 	patternCLI *regexp.Regexp
 	// patternCommand is the regexp pattern of the command.
+	// - default: `^(\w+(?:\s+\w+)+)`
 	patternCommand *regexp.Regexp
 	// patternFlags is the regexp pattern of the flag.
+	// - default: `(\s+-{1,2}\w+\s+\w+)+`
 	patternFlag *regexp.Regexp
 	// patternOptions is the regexp pattern of the option.
+	// - default: `(\s+-[A-Z0-9]+)+`
 	patternOption *regexp.Regexp
 	// Trimmer is a white space trimmer in between.
+	// - default: `\s{2,}`
 	Trimmer *regexp.Regexp
 }
 
@@ -83,14 +88,11 @@ func (p *ParserDefault) Parse(args string) (i Input, err error) {
 	}
 
 	// commands
-	commands, err := p.parseCommands(args)
-	if err != nil {
-		return
-	}
+	commands, _ := p.ParseCommands(args)
 	// flags
-	flags := p.parseFlags(args)
+	flags := p.ParseFlags(args)
 	// options
-	options := p.parseOptions(args)
+	options := p.ParseOptions(args)
 
 	// input
 	i = Input{
@@ -101,9 +103,10 @@ func (p *ParserDefault) Parse(args string) (i Input, err error) {
 	return
 }
 
-// parseCommands is the method that parses the commands.
-func (p *ParserDefault) parseCommands(args string) (c CommandInput, err error) {
+// ParseCommands is the method that parses the commands.
+func (p *ParserDefault) ParseCommands(args string) (c CommandInput, err error) {
 	// check matching between args and patternCommand
+	// - at least 2 commands: app and command
 	if !p.patternCommand.MatchString(args) {
 		err = ErrInvalidCommands
 		return
@@ -121,21 +124,17 @@ func (p *ParserDefault) parseCommands(args string) (c CommandInput, err error) {
 	commands := strings.Split(match, " ")
 	// - check if valid
 	size := len(commands)
-	if size < 2 {
-		err = ErrInvalidCommands
-		return
-	}
 	// command input
 	c = CommandInput{
 		Name: commands[0],
-		Chain: commands[1:size-1],
+		Chain: commands[1:size-1],  // if there are is no chain, it will be empty
 		Command: commands[size-1],
 	}
 	return
 }
 
-// parseFlags is the method that parses the flags.
-func (p *ParserDefault) parseFlags(args string) (f map[string]any) {
+// ParseFlags is the method that parses the flags.
+func (p *ParserDefault) ParseFlags(args string) (f map[string]any) {
 	// check matching between args and patternFlag
 	if !p.patternFlag.MatchString(args) {
 		return
@@ -166,8 +165,8 @@ func (p *ParserDefault) parseFlags(args string) (f map[string]any) {
 	return
 }
 
-// parseOptions is the method that parses the options.
-func (p *ParserDefault) parseOptions(args string) (o map[string]int) {
+// ParseOptions is the method that parses the options.
+func (p *ParserDefault) ParseOptions(args string) (o map[string]int) {
 	// check matching between args and patternOption
 	if !p.patternOption.MatchString(args) {
 		return
