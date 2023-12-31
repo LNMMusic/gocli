@@ -16,13 +16,12 @@ func TestParserDefault_ParseCommand(t *testing.T) {
 		ps := gocli.NewParserDefault(optional.None[gocli.ConfigParserDefault]())
 
 		// act
-		args := "app cmd1 --flag1 value1 -flag2 value2 -O1 -O2"
+		args := "cmd1 --flag1 value1 -flag2 value2 -O1 -O2"
 		ci, err := ps.ParseCommands(args)
 
 		// assert
 		require.NoError(t, err)
 		require.Equal(t, gocli.CommandInput{
-			Name: "app",
 			Chain: []string{},
 			Command: "cmd1",
 		}, ci)
@@ -34,13 +33,12 @@ func TestParserDefault_ParseCommand(t *testing.T) {
 		ps := gocli.NewParserDefault(optional.None[gocli.ConfigParserDefault]())
 
 		// act
-		args := "app cmd1 cmd2 cmd3 --flag1 value1 -flag2 value2 -O1 -O2"
+		args := "cmd1 cmd2 cmd3 --flag1 value1 -flag2 value2 -O1 -O2"
 		ci, err := ps.ParseCommands(args)
 
 		// assert
 		require.NoError(t, err)
 		require.Equal(t, gocli.CommandInput{
-			Name: "app",
 			Chain: []string{"cmd1", "cmd2"},
 			Command: "cmd3",
 		}, ci)
@@ -68,7 +66,7 @@ func TestParserDefault_ParseCommand(t *testing.T) {
 		ps := gocli.NewParserDefault(optional.None[gocli.ConfigParserDefault]())
 
 		// act
-		args := "app --flag1 value1 -flag2 value2 -O1 -O2"
+		args := "--flag1 value1 -flag2 value2 -O1 -O2"
 		ci, err := ps.ParseCommands(args)
 
 		// assert
@@ -87,7 +85,7 @@ func TestParserDefault_ParseFlags(t *testing.T) {
 		ps := gocli.NewParserDefault(optional.None[gocli.ConfigParserDefault]())
 
 		// act
-		args := "app cmd1 --flag1 value1 -O1 -O2"
+		args := "cmd1 --flag1 value1 -O1 -O2"
 		f := ps.ParseFlags(args)
 
 		// assert
@@ -102,7 +100,7 @@ func TestParserDefault_ParseFlags(t *testing.T) {
 		ps := gocli.NewParserDefault(optional.None[gocli.ConfigParserDefault]())
 
 		// act
-		args := "app cmd1 --flag1 value1 -flag2 value2 -O1 -O2"
+		args := "cmd1 --flag1 value1 -flag2 value2 -O1 -O2"
 		f := ps.ParseFlags(args)
 
 		// assert
@@ -118,7 +116,7 @@ func TestParserDefault_ParseFlags(t *testing.T) {
 		ps := gocli.NewParserDefault(optional.None[gocli.ConfigParserDefault]())
 		
 		// act
-		args := "app cmd1 -O1 -O2"
+		args := "cmd1 -O1 -O2"
 		f := ps.ParseFlags(args)
 
 		// assert
@@ -147,7 +145,7 @@ func TestParserDefault_ParseOptions(t *testing.T) {
 		ps := gocli.NewParserDefault(optional.None[gocli.ConfigParserDefault]())
 
 		// act
-		args := "app cmd1 --flag1 value1 -O1"
+		args := "cmd1 --flag1 value1 -O1"
 		o := ps.ParseOptions(args)
 
 		// assert
@@ -162,7 +160,7 @@ func TestParserDefault_ParseOptions(t *testing.T) {
 		ps := gocli.NewParserDefault(optional.None[gocli.ConfigParserDefault]())
 
 		// act
-		args := "app cmd1 --flag1 value1 -O1 -O2"
+		args := "cmd1 --flag1 value1 -O1 -O2"
 		o := ps.ParseOptions(args)
 
 		// assert
@@ -178,7 +176,7 @@ func TestParserDefault_ParseOptions(t *testing.T) {
 		ps := gocli.NewParserDefault(optional.None[gocli.ConfigParserDefault]())
 		
 		// act
-		args := "app cmd1 --flag1 value1"
+		args := "cmd1 --flag1 value1"
 		o := ps.ParseOptions(args)
 
 		// assert
@@ -201,21 +199,20 @@ func TestParserDefault_ParseOptions(t *testing.T) {
 
 // TestParserDefault_Parse tests the method Parse of the ParserDefault type.
 func TestParserDefault_Parse(t *testing.T) {
-	t.Run("success - case 01: app + 1 command + 1 flag + 1 option", func(t *testing.T) {
+	t.Run("success - case 01: + 1 command + 1 flag + 1 option", func(t *testing.T) {
 		// arrange
 		// - parser: default
-		// - args: app cmd1 --flag1 value1 -O1
+		// - args: cmd1 --flag1 value1 -O1
 		ps := gocli.NewParserDefault(optional.None[gocli.ConfigParserDefault]())
 
 		// act
-		args := "app cmd1 --flag1 value1 -O1"
+		args := "cmd1 --flag1 value1 -O1"
 		i, err := ps.Parse(args)
 
 		// assert
 		require.NoError(t, err)
 		require.Equal(t, gocli.Input{
 			CommandInput: gocli.CommandInput{
-				Name: "app",
 				Chain: []string{},
 				Command: "cmd1",
 			},
@@ -228,21 +225,20 @@ func TestParserDefault_Parse(t *testing.T) {
 		}, i)
 	})
 
-	t.Run("success - case 02: app + 1 command + 2 flags + 2 options", func(t *testing.T) {
+	t.Run("success - case 02: + 1 command + 2 flags + 2 options", func(t *testing.T) {
 		// arrange
 		// - parser: default
-		// - args: app cmd1 --flag1 value1 -flag2 value2 -O1 -O2
+		// - args: cmd1 --flag1 value1 -flag2 value2 -O1 -O2
 		ps := gocli.NewParserDefault(optional.None[gocli.ConfigParserDefault]())
 
 		// act
-		args := "app cmd1 --flag1 value1 -flag2 value2 -O1 -O2"
+		args := "cmd1 --flag1 value1 -flag2 value2 -O1 -O2"
 		i, err := ps.Parse(args)
 
 		// assert
 		require.NoError(t, err)
 		require.Equal(t, gocli.Input{
 			CommandInput: gocli.CommandInput{
-				Name: "app",
 				Chain: []string{},
 				Command: "cmd1",
 			},
@@ -257,21 +253,20 @@ func TestParserDefault_Parse(t *testing.T) {
 		}, i)
 	})
 
-	t.Run("success - case 03: app + 2 chain + 1 command + 2 flags + 2 options", func(t *testing.T) {
+	t.Run("success - case 03: + 2 chain + 1 command + 2 flags + 2 options", func(t *testing.T) {
 		// arrange
 		// - parser: default
-		// - args: app cmd1 cmd2 cmd3 --flag1 value1 -flag2 value2 -O1 -O2
+		// - args: cmd1 cmd2 cmd3 --flag1 value1 -flag2 value2 -O1 -O2
 		ps := gocli.NewParserDefault(optional.None[gocli.ConfigParserDefault]())
 
 		// act
-		args := "app cmd1 cmd2 cmd3 --flag1 value1 -flag2 value2 -O1 -O2"
+		args := "cmd1 cmd2 cmd3 --flag1 value1 -flag2 value2 -O1 -O2"
 		i, err := ps.Parse(args)
 
 		// assert
 		require.NoError(t, err)
 		require.Equal(t, gocli.Input{
 			CommandInput: gocli.CommandInput{
-				Name: "app",
 				Chain: []string{"cmd1", "cmd2"},
 				Command: "cmd3",
 			},
@@ -286,14 +281,14 @@ func TestParserDefault_Parse(t *testing.T) {
 		}, i)
 	})
 
-	t.Run("failure - case 01: app + 1 flag + 1 option | invalid args", func(t *testing.T) {
+	t.Run("failure - case 01: + 1 flag + 1 option | invalid args", func(t *testing.T) {
 		// arrange
 		// - parser: default
-		// - args: app --flag1 value1 -O1
+		// - args: --flag1 value1 -O1
 		ps := gocli.NewParserDefault(optional.None[gocli.ConfigParserDefault]())
 
 		// act
-		args := "app --flag1 value1 -O1"
+		args := "--flag1 value1 -O1"
 		i, err := ps.Parse(args)
 
 		// assert

@@ -25,8 +25,8 @@ type ConfigParserDefault struct {
 func NewParserDefault(cfg optional.Option[ConfigParserDefault]) (p *ParserDefault) {
 	// default configuration
 	defaultCfg := ConfigParserDefault{
-		PatternCLI: `^(\w+(?:\s+\w+)+)(\s+-{1,2}\w+\s+\w+)*(\s+-[A-Z0-9]+)*$`,
-		PatternChain: `^(\w+(?:\s+\w+)+)`,
+		PatternCLI: `^(\w+(?:\s+\w+)*)(\s+-{1,2}\w+\s+\w+)*(\s+-[A-Z0-9]+)*$`,
+		PatternChain: `^(\w+(?:\s+\w+)*)`,
 		PatternFlag: `(\s+-{1,2}\w+\s+\w+)+`,
 		PatternOption: `(\s+-[A-Z0-9]+)+`,
 		Trimmer: `\s{2,}`,
@@ -63,10 +63,10 @@ func NewParserDefault(cfg optional.Option[ConfigParserDefault]) (p *ParserDefaul
 // ParserDefault is the struct that wraps the default parser.
 type ParserDefault struct {
 	// patternCLI is the regexp pattern of the full command line.
-	// - default: `^(\w+(?:\s+\w+)+)(\s+-{1,2}\w+\s+\w+)*(\s+-[A-Z0-9]+)*$`
+	// - default: `^(\w+(?:\s+\w+)*)(\s+-{1,2}\w+\s+\w+)*(\s+-[A-Z0-9]+)*$`
 	patternCLI *regexp.Regexp
 	// patternCommand is the regexp pattern of the command.
-	// - default: `^(\w+(?:\s+\w+)+)`
+	// - default: `^(\w+(?:\s+\w+)*)`
 	patternCommand *regexp.Regexp
 	// patternFlags is the regexp pattern of the flag.
 	// - default: `(\s+-{1,2}\w+\s+\w+)+`
@@ -126,8 +126,7 @@ func (p *ParserDefault) ParseCommands(args string) (c CommandInput, err error) {
 	size := len(commands)
 	// command input
 	c = CommandInput{
-		Name: commands[0],
-		Chain: commands[1:size-1],  // if there are is no chain, it will be empty
+		Chain: commands[:size-1],  // if there are is no chain, it will be empty
 		Command: commands[size-1],
 	}
 	return

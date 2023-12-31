@@ -1,5 +1,14 @@
 package gocli
 
+// NewCommanderManager is the function that creates a new command manager.
+func NewCommanderManager(name, description string) (cm *CommanderManager) {
+	cm = &CommanderManager{
+		Name: name,
+		Description: description,
+	}
+	return
+}
+
 // CommanderManager is the struct that represents a command manager.
 type CommanderManager struct {
 	// Name is the name of the command composite.

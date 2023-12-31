@@ -28,7 +28,7 @@ type CLI struct {
 func (c CLI) Run() (err error) {
 	// fetch args
 	// - os.Stdin
-	args := strings.Join(os.Args, " ")
+	args := strings.Join(os.Args[1:], " ")
 	
 	// parse the input
 	input, err := c.Parser.Parse(args)
@@ -37,7 +37,7 @@ func (c CLI) Run() (err error) {
 	}
 	
 	// find the command handler
-	handler, err := c.Commander.FindHandler(input.CommandInput.Name, input.CommandInput.Chain...)
+	handler, err := c.Commander.FindHandler(input.CommandInput.Command, input.CommandInput.Chain...)
 	if err != nil {
 		return
 	}

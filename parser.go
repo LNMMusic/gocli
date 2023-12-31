@@ -10,8 +10,6 @@ var (
 )
 
 type CommandInput struct {
-	// Name is the name of the command.
-	Name string
 	// Chain is the chain of the command.
 	Chain []string
 	// Command is the command.

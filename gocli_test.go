@@ -15,13 +15,13 @@ func TestCLI_Run(t *testing.T) {
 	t.Run("success - case 01: command is executed successfully", func(t *testing.T) {
 		// arrange
 		// - std-in
-		os.Args = []string{"app", "cmd1", "--flag1", "value1", "-flag2", "value2", "-O1", "-O2"}
+		os.Args = []string{"app.exe", "cmd1", "--flag1", "value1", "-flag2", "value2", "-O1", "-O2"}
 		// - parser: mock
 		pr := gocli.NewParserMock()
-		pr.On("Parse", "app cmd1 --flag1 value1 -flag2 value2 -O1 -O2").Return(gocli.Input{
+		pr.On("Parse", "cmd1 --flag1 value1 -flag2 value2 -O1 -O2").Return(gocli.Input{
 			CommandInput: gocli.CommandInput{
-				Name: "cmd1",
 				Chain: []string{},
+				Command: "cmd1",
 			},
 			Flags: map[string]any{
 				"flag1": "value1",
@@ -55,10 +55,10 @@ func TestCLI_Run(t *testing.T) {
 	t.Run("failure - case 01: parser fails", func(t *testing.T) {
 		// arrange
 		// - std-in
-		os.Args = []string{"app", "cmd1", "--flag1", "value1", "-flag2", "value2", "-O1", "-O2"}
+		os.Args = []string{"app.exe", "cmd1", "--flag1", "value1", "-flag2", "value2", "-O1", "-O2"}
 		// - parser: mock
 		pr := gocli.NewParserMock()
-		pr.On("Parse", "app cmd1 --flag1 value1 -flag2 value2 -O1 -O2").Return(gocli.Input{}, gocli.ErrInvalidArgs)
+		pr.On("Parse", "cmd1 --flag1 value1 -flag2 value2 -O1 -O2").Return(gocli.Input{}, gocli.ErrInvalidArgs)
 		// - commander: mock
 		// ...
 		// - cli
@@ -77,13 +77,13 @@ func TestCLI_Run(t *testing.T) {
 	t.Run("failure - case 02: command handler not found", func(t *testing.T) {
 		// arrange
 		// - std-in
-		os.Args = []string{"app", "cmd1", "--flag1", "value1", "-flag2", "value2", "-O1", "-O2"}
+		os.Args = []string{"app.exe", "cmd1", "--flag1", "value1", "-flag2", "value2", "-O1", "-O2"}
 		// - parser: mock
 		pr := gocli.NewParserMock()
-		pr.On("Parse", "app cmd1 --flag1 value1 -flag2 value2 -O1 -O2").Return(gocli.Input{
+		pr.On("Parse", "cmd1 --flag1 value1 -flag2 value2 -O1 -O2").Return(gocli.Input{
 			CommandInput: gocli.CommandInput{
-				Name: "cmd1",
 				Chain: []string{},
+				Command: "cmd1",
 			},
 			Flags: map[string]any{
 				"flag1": "value1",
@@ -119,13 +119,13 @@ func TestCLI_Run(t *testing.T) {
 	t.Run("failure - case 03: command handler fails", func(t *testing.T) {
 		// arrange
 		// - std-in
-		os.Args = []string{"app", "cmd1", "--flag1", "value1", "-flag2", "value2", "-O1", "-O2"}
+		os.Args = []string{"app.exe", "cmd1", "--flag1", "value1", "-flag2", "value2", "-O1", "-O2"}
 		// - parser: mock
 		pr := gocli.NewParserMock()
-		pr.On("Parse", "app cmd1 --flag1 value1 -flag2 value2 -O1 -O2").Return(gocli.Input{
+		pr.On("Parse", "cmd1 --flag1 value1 -flag2 value2 -O1 -O2").Return(gocli.Input{
 			CommandInput: gocli.CommandInput{
-				Name: "cmd1",
 				Chain: []string{},
+				Command: "cmd1",
 			},
 			Flags: map[string]any{
 				"flag1": "value1",
