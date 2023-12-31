@@ -11,12 +11,13 @@ var (
 
 // Commander is the interface that wraps the methods that a command registry must implement.
 type Commander interface {
+	// Read-Operations
 	// FindHandler is the method that finds a handler by name.
 	FindHandler(commandName string, commandChain ...string) (h CommandHandler, err error)
 
+	// Write-Operations
 	// AddCommand is the method that adds a command to the registry.
 	AddCommand(command Command) (err error)
-
 	// Group is the method that groups a list of commands.
 	Group(name string, description string) (cm Commander)
 }
